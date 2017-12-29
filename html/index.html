@@ -1,0 +1,69 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Cubagems LP Ferrosos</title>
+    <link type="text/css" href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link type="text/css" href="/libs/angular/ui-grid/ui-grid.css" rel="stylesheet" />
+    <script src="/libs/angular/angular.js"></script>
+    <script src="/libs/angular/angular-touch.js"></script>
+    <script src="/libs/angular/angular-animate.js"></script>
+    <script src="/libs/angular/bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/libs/angular/ui-grid/ui-grid.js"></script>
+    <script src="/libs/angular/ui-grid/docs/grunt-scripts/csv.js"></script>
+    <script src="/libs/angular/jinqjs/jinqjs.js"></script>
+    <script src="jinqjs-breakdown.js"></script>
+    <script src="jinqjs-round.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body ng-controller="MainCtrl">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-4">
+          <textarea ng-model="breakdown_mask" ng-list="&#10;" ng-trim="false" ng-model-options="{ debounce: 1000 }" style="width: 360px; height: 180px;" class="form-control"></textarea>
+        </div>
+        <div class="col-xs-4 list-group">
+          <div class="list-group-item">
+            <input type="text" placeholder="Database path" ng-model="input_uri" class="form-control" style="width: 360px;"/>
+            <button type="button" class="btn btn-default" ng-click="actionLoadURI()">Load</button>
+          </div>
+          <div class="list-group-item">
+            <input type="file" id="input_file" class="form-control"/>
+            <button type="button" class="btn btn-default" ng-click="actionLoadFile()">Load</button>
+          </div>
+        </div>
+        <div class="col-xs-4 panel panel-success">
+          <div class="panel-heading">Toolbox</div>
+            <button type="button" class="btn btn-primary" ng-click="actionExportCSVs()">Multi export csv</button>
+            <br>
+            <button type="button" class="btn btn-primary" ng-click="actionFormatMt()">{{ format_mt ? "Format t" : "Format Mt" }}</button>
+            <br>
+            <button type="button" class="btn btn-primary" ng-click="changeMode()">{{ db }}</button>
+        </div>
+      </div>
+      <div class="row well">
+        <div class="grid col-xs-2" ui-grid="gridKey" ui-grid-selection></div>
+        <div class="grid col-xs-2" ng-repeat="item in pivotGrid" ui-grid="item" ui-grid-selection></div>
+      </div>
+      <div class="row panel panel-primary" ng-repeat="item in grid_a">
+        <div class="panel-heading">Select classication field
+            <select ng-model="item.name" class="form-control" ng-options="option.columns as option.columns for option in gridKey.data">
+              <option value=""></option>
+            </select>            
+        </div>
+        <div class="grid" ui-grid="item" ui-grid-exporter></div>
+      </div>
+      <div class="row panel panel-warning">
+        <div class="panel-heading">Select classication field
+            <select ng-model="grid_b_name" class="form-control" ng-options="option.columns as option.columns for option in gridKey.data">
+              <option value=""></option>
+            </select>            
+        </div>
+        <div ng-repeat="item in grid_b" class="list-group panel-info">
+          <div class="panel-heading" ng-bind="item.name"></div>
+          <div class="grid" ui-grid="item" ui-grid-exporter></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
